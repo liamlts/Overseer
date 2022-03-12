@@ -1,8 +1,15 @@
 # Overseer
-This is a program I wrote for myself therefore it assumes you have password authentication diabled for OpenSSH and are using SSH keys. Eventually it will have an
-option for those who use password auth. At the moment it simply relays information to the user about possible malicious hosts, my goal is to add
-firewall functionality by default without user input. 
-
-To run Overseer currently(3/9/22) simply use go build logMonitor.go, then sudo ./logMonitor. 
+<h4>Dependencies</h4>
+  <li><i>
+  Uncomplicated firewall.(UFW)
+   </li>
+  <li>
+  Password authentication disabled in your sshd_config file.
+  </li></i>
+  <h4>About</h4>
+  <p>
+  This program scans your log file and checks for malicious hosts whether it be a scanner such as shodan or a bruteforce/dictionary attack. Then usuing
+  UFW adds a DENY from rule.
+  </p>
 
 Please note this is far from a finished project.
