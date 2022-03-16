@@ -1,10 +1,8 @@
-package main
+package commands
 
 import (
 	"fmt"
 	"os/exec"
-
-	"example.com/logMonitor"
 )
 
 func DropBadActors(mIps []string) {
@@ -23,13 +21,4 @@ func DropBadActors(mIps []string) {
 		}
 		fmt.Println(curIP, " ", string(stdout))
 	}
-}
-
-func main() {
-	logMonitor.ShowInfo()
-
-	ipList := logMonitor.MonitLogs()
-	badActors := logMonitor.GetMalIps(ipList)
-	fmt.Println("Dropping malicious hosts...")
-	DropBadActors(badActors)
 }
