@@ -120,6 +120,21 @@ func geoData(malIps []string) map[string]IPInfo {
 	return geoData
 }
 
+func MalDns() []string {
+	ipList := MonitLogs()
+
+	ipHM := geoData(ipList)
+	var dnslist []string
+	for _, ipinfo := range ipHM {
+		if strings.Contains(ipinfo.Data.Geo.Rdns, "tor") || strings.Contains(ipinfo.Data.Geo.Rdns, "scanner") || strings.Contains(ipinfo.Data.Geo.Rdns, "census") || strings.Contains(ipinfo.Data.Geo.Rdns, "EMERALD-ONION") {
+			fmt.Println("Found malicious DNS. Adding to bad actor list", ipinfo.Data.Geo.Rdns)
+			dnslist = append(dnslist, ipinfo.Data.Geo.IP)
+
+		}
+	}
+	return dnslist
+}
+
 func check(e error) {
 	if e != nil {
 		log.Fatal(e)
