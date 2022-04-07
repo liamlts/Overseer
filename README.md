@@ -16,7 +16,7 @@
   
   ```
   go build overseer.go
-  sudo ./overseer
+  sudo ./overseer full
   ```
 
 Please note this is far from a finished project.
