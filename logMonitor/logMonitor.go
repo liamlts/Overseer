@@ -73,10 +73,10 @@ func MonitLogs() []string {
 		file = append(file, lines.Text())
 	}
 	var ipList []string
-	for i, _ := range file {
+	for i := range file {
 		if strings.Contains(file[i], "Connection closed by") {
 			ts := strings.Fields(file[i])
-			for ind2, _ := range ts {
+			for ind2 := range ts {
 				if strings.HasPrefix(ts[ind2], "by") {
 					if ts[ind2+1] != "remote" && ts[ind2+1] != "invalid" && ts[ind2+1] != "/var/log/auth.log" && ts[ind2+1] != "authenticating" {
 						//fmt.Println(ts[ind2+1])
@@ -100,7 +100,7 @@ func GetMalIps(ips []string) []string {
 		ipsHM[i] = s
 	}
 
-	for key, _ := range ipsHM {
+	for key := range ipsHM {
 		if ipsHM[key] == ipsHM[key+1] {
 			malIps = append(malIps, ipsHM[key])
 		}
@@ -148,14 +148,14 @@ func ShowInfo() {
 
 	fmt.Println("IPs that tried to connect to us or scan us")
 	fmt.Println("-------------------------------------")
-	for i1, _ := range ipList {
+	for i1 := range ipList {
 		fmt.Println(ipList[i1])
 	}
 	fmt.Println("--------------------------------------")
 
 	fmt.Println("Possible malicious hosts:")
 
-	for i, _ := range badActors {
+	for i := range badActors {
 		fmt.Println("Host:", i+1, " ", badActors[i])
 	}
 

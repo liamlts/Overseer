@@ -12,7 +12,7 @@ func DropBadActors(mIps []string) {
 	arg1 := "from"
 	var curIP string
 
-	for index, _ := range mIps {
+	for index := range mIps {
 		curIP = mIps[index]
 		cmd := exec.Command(firewall, arg, arg1, curIP)
 		stdout, err := cmd.Output()
