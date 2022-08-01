@@ -1,4 +1,4 @@
-package sha256checksums
+package main
 
 import (
 	"bufio"
@@ -62,6 +62,9 @@ func GenSumFile(sums []string) {
 
 		file, err := os.OpenFile("checksums/sha256.data",
 			os.O_CREATE|os.O_WRONLY, 0744)
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		defer file.Close()
 
