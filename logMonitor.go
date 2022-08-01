@@ -1,4 +1,4 @@
-package logMonitor
+package main
 
 import (
 	"bufio"
