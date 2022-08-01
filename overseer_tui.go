@@ -51,7 +51,6 @@ func (m model) View() string {
 	var s string
 	for i := range m.IPs {
 		s += m.IPs[i]
-		fmt.Println(i)
 	}
 	return s
 }
