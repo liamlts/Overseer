@@ -48,9 +48,10 @@ func (m model) View() string {
 		return fmt.Sprintf("\nWe had some trouble: %v", m.err)
 	}
 
-	s := "Checking log files ... "
+	var s string
 	for i := range m.IPs {
-		s += m.IPs[i] + "  "
+		s += m.IPs[i]
+		fmt.Println(i)
 	}
 	return s
 }

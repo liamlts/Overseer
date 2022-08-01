@@ -79,7 +79,7 @@ func MonitLogs() []string {
 			for ind2 := range ts {
 				if strings.HasPrefix(ts[ind2], "by") {
 					if ts[ind2+1] != "remote" && ts[ind2+1] != "invalid" && ts[ind2+1] != "/var/log/auth.log" && ts[ind2+1] != "authenticating" {
-						//fmt.Println(ts[ind2+1])
+						fmt.Println(ts[ind2+1])
 						ipList = append(ipList, ts[ind2+1])
 					}
 				}
