@@ -4,63 +4,76 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
+var docStyle = lipgloss.NewStyle().Margin(1, 2)
+
+type item struct {
+	title string
+}
+
+func (i item) Title() string       { return i.title }
+func (i item) Description() string { return i.title }
+func (i item) FilterValue() string { return i.title }
+
 type model struct {
-	IPs []string
-	err error
+	list list.Model
 }
-
-func checkLogs() tea.Msg {
-	ips := MonitLogs()
-	return logMsg(ips)
-}
-
-type logMsg []string
-
-type errMsg struct{ err error }
-
-func (e errMsg) Error() string { return e.err.Error() }
 
 func (m model) Init() tea.Cmd {
-	return checkLogs
+	return nil
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
-	case logMsg:
-		ipList := []string(msg)
-		for i := range ipList {
-			m.IPs = append(m.IPs, ipList[i])
-		}
-		return m, tea.Quit
-	case errMsg:
-		m.err = msg
-		return m, tea.Quit
 	case tea.KeyMsg:
-		if msg.Type == tea.KeyCtrlC {
+		if msg.String() == "ctrl+c" {
 			return m, tea.Quit
 		}
+	case tea.WindowSizeMsg:
+		h, v := docStyle.GetFrameSize()
+		m.list.SetSize(msg.Width-h, msg.Height-v)
 	}
-	return m, nil
+
+	var cmd tea.Cmd
+	m.list, cmd = m.list.Update(msg)
+	return m, cmd
 }
 
 func (m model) View() string {
-	if m.err != nil {
-		return fmt.Sprintf("\nWe had some trouble: %v", m.err)
-	}
-
-	var s string
-	for i := range m.IPs {
-		s += m.IPs[i]
-	}
-	return s
+	return docStyle.Render(m.list.View())
 }
 
 func main() {
-	if err := tea.NewProgram(model{}).Start(); err != nil {
-		fmt.Printf("There was an error starting the program: %v", err)
+
+	var items []list.Item
+	ips := MonitLogs()
+	fmt.Println(len(ips))
+	//var cItem item
+
+	for i := len(ips); i > 0; i-- {
+		item := item{title: string(ips[i-1])}
+		items = append(items, item)
+	}
+
+	/*
+		items := []list.Item{
+			item{title: "test one"},
+			item{title: "Another terst"},
+			item{title: "More testing"},
+		}
+	*/
+
+	m := model{list: list.New(items, list.NewDefaultDelegate(), 0, 0)}
+	m.list.Title = "My Fave Things"
+
+	p := tea.NewProgram(m, tea.WithAltScreen())
+
+	if err := p.Start(); err != nil {
+		fmt.Println("Error running program:", err)
 		os.Exit(1)
 	}
 }
