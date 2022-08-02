@@ -39,6 +39,10 @@ type IPInfo struct {
 	} `json:"data"`
 }
 
+func (info IPInfo) String() string {
+	return fmt.Sprintf("%s\t%s\t%s\t%s\n", info.Data.Geo.Host, info.Data.Geo.Rdns, info.Data.Geo.CountryName, info.Data.Geo.City)
+}
+
 func apiReq(ip string) IPInfo {
 	api := "https://tools.keycdn.com/geo.json?host="
 	full := api + ip

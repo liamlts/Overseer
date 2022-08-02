@@ -30,7 +30,10 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case logMsg:
-		m.IPs = []string(msg)
+		ipList := []string(msg)
+		for i := range ipList {
+			m.IPs = append(m.IPs, ipList[i])
+		}
 		return m, tea.Quit
 	case errMsg:
 		m.err = msg
