@@ -12,12 +12,12 @@ import (
 var docStyle = lipgloss.NewStyle().Margin(1, 2)
 
 type item struct {
-	title string
+	title IPInfo
 }
 
-func (i item) Title() string       { return i.title }
-func (i item) Description() string { return i.title }
-func (i item) FilterValue() string { return i.title }
+func (i item) Title() string       { return i.title.String() }
+func (i item) Description() string { return i.title.String() }
+func (i item) FilterValue() string { return i.title.String() }
 
 type model struct {
 	list list.Model
@@ -51,9 +51,10 @@ func main() {
 
 	var items []list.Item
 	ips := MonitLogs()
+	ipList := geoData(ips)
 
-	for i := range ips {
-		item := item{title: string(ips[i])}
+	for _, v := range ips {
+		item := item{title: ipList[v]}
 		items = append(items, item)
 	}
 
