@@ -51,24 +51,14 @@ func main() {
 
 	var items []list.Item
 	ips := MonitLogs()
-	fmt.Println(len(ips))
-	//var cItem item
 
-	for i := len(ips); i > 0; i-- {
-		item := item{title: string(ips[i-1])}
+	for i := range ips {
+		item := item{title: string(ips[i])}
 		items = append(items, item)
 	}
 
-	/*
-		items := []list.Item{
-			item{title: "test one"},
-			item{title: "Another terst"},
-			item{title: "More testing"},
-		}
-	*/
-
 	m := model{list: list.New(items, list.NewDefaultDelegate(), 0, 0)}
-	m.list.Title = "My Fave Things"
+	m.list.Title = "IPs of Attempted Connections"
 
 	p := tea.NewProgram(m, tea.WithAltScreen())
 

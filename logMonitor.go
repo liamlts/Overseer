@@ -155,35 +155,3 @@ func check(e error) {
 		log.Fatal(e)
 	}
 }
-
-/*
-func ShowInfo() {
-	ipList := MonitLogs()
-
-	badActors := GetMalIps(ipList)
-
-	fmt.Println("IPs that tried to connect to us or scan us")
-	fmt.Println("-------------------------------------")
-	for i1 := range ipList {
-		fmt.Println(ipList[i1])
-	}
-	fmt.Println("--------------------------------------")
-
-	fmt.Println("Possible malicious hosts:")
-
-	for i := range badActors {
-		fmt.Println("Host:", i+1, " ", badActors[i])
-	}
-
-	fmt.Println("-----------------------------------------------")
-	fmt.Println("Retriving data on malicious IPs please wait...")
-	fmt.Println("-----------------------------------------------")
-	ipData := geoData(badActors)
-
-	for ip, geodata := range ipData {
-		fmt.Println("IP:", ip, "Data:", geodata)
-		fmt.Println("")
-		fmt.Println("------------------------------------------------------------------------")
-	}
-}
-*/
