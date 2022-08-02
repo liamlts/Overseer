@@ -47,16 +47,16 @@ type String string
 
 func (s String) FilterValue() string { return string(s) }
 
-func apiReq(ip string) IPInfo {
+func apiReq(ip String) IPInfo {
 	api := "https://tools.keycdn.com/geo.json?host="
-	full := api + ip
+	full := String(api) + ip
 
 	client := &http.Client{}
 
-	req, err := http.NewRequest("GET", full, nil)
+	req, err := http.NewRequest("GET", string(full), nil)
 	check(err)
 
-	req.Header.Set("User-Agent", "keycdn-tools:https://www.example.com")
+	req.Header.Set("User-Agent", "keycdn-tools:https://www.google.com")
 	resp, err := client.Do(req)
 	check(err)
 
@@ -119,13 +119,13 @@ func GetMalIps(ips []string) []string {
 	return malIps
 }
 
-func geoData(malIps []string) map[string]IPInfo {
-	geoData := make(map[string]IPInfo)
+func geoData(malIps []String) map[String]IPInfo {
+	geoData := make(map[String]IPInfo)
 
 	for i, ip := range malIps {
 		//Rate limited API to 3r/s
 		time.Sleep(3001 * time.Millisecond)
-		fmt.Println("Getting info on: ", malIps[i])
+		fmt.Println("Building list please wait...: ", malIps[i])
 		geoData[ip] = apiReq(malIps[i])
 	}
 	return geoData
@@ -133,9 +133,9 @@ func geoData(malIps []string) map[string]IPInfo {
 
 func MalDns() []string {
 	ipList := MonitLogs()
-	var list []string
+	var list []String
 	for i := range ipList {
-		list = append(list, string(ipList[i]))
+		list = append(list, String(ipList[i]))
 	}
 
 	ipHM := geoData(list)
