@@ -39,6 +39,14 @@ type IPInfo struct {
 	} `json:"data"`
 }
 
+func (info IPInfo) String() string {
+	return fmt.Sprintf("%s\t%s\t%s\t%s\n", info.Data.Geo.Host, info.Data.Geo.Rdns, info.Data.Geo.CountryName, info.Data.Geo.City)
+}
+
+type String string
+
+func (s String) FilterValue() string { return string(s) }
+
 func apiReq(ip string) IPInfo {
 	api := "https://tools.keycdn.com/geo.json?host="
 	full := api + ip
@@ -62,7 +70,7 @@ func apiReq(ip string) IPInfo {
 	return ipinfo
 }
 
-func MonitLogs() []string {
+func MonitLogs() []String {
 	var file []string
 	dat, err := os.Open("/var/log/auth.log")
 	check(err)
@@ -79,7 +87,6 @@ func MonitLogs() []string {
 			for ind2 := range ts {
 				if strings.HasPrefix(ts[ind2], "by") {
 					if ts[ind2+1] != "remote" && ts[ind2+1] != "invalid" && ts[ind2+1] != "/var/log/auth.log" && ts[ind2+1] != "authenticating" {
-						fmt.Println(ts[ind2+1])
 						ipList = append(ipList, ts[ind2+1])
 					}
 				}
@@ -89,7 +96,11 @@ func MonitLogs() []string {
 	if err := lines.Err(); err != nil {
 		log.Fatal(err)
 	}
-	return ipList
+	var mIpList []String
+	for r := range ipList {
+		mIpList = append(mIpList, String(ipList[r]))
+	}
+	return mIpList
 }
 
 func GetMalIps(ips []string) []string {
@@ -122,8 +133,12 @@ func geoData(malIps []string) map[string]IPInfo {
 
 func MalDns() []string {
 	ipList := MonitLogs()
+	var list []string
+	for i := range ipList {
+		list = append(list, string(ipList[i]))
+	}
 
-	ipHM := geoData(ipList)
+	ipHM := geoData(list)
 	var dnslist []string
 	for _, ipinfo := range ipHM {
 		if strings.Contains(ipinfo.Data.Geo.Rdns, "tor") || strings.Contains(ipinfo.Data.Geo.Rdns, "scanner") || strings.Contains(ipinfo.Data.Geo.Rdns, "census") || strings.Contains(ipinfo.Data.Geo.Rdns, "EMERALD-ONION") {
@@ -138,35 +153,5 @@ func MalDns() []string {
 func check(e error) {
 	if e != nil {
 		log.Fatal(e)
-	}
-}
-
-func ShowInfo() {
-	ipList := MonitLogs()
-
-	badActors := GetMalIps(ipList)
-
-	fmt.Println("IPs that tried to connect to us or scan us")
-	fmt.Println("-------------------------------------")
-	for i1 := range ipList {
-		fmt.Println(ipList[i1])
-	}
-	fmt.Println("--------------------------------------")
-
-	fmt.Println("Possible malicious hosts:")
-
-	for i := range badActors {
-		fmt.Println("Host:", i+1, " ", badActors[i])
-	}
-
-	fmt.Println("-----------------------------------------------")
-	fmt.Println("Retriving data on malicious IPs please wait...")
-	fmt.Println("-----------------------------------------------")
-	ipData := geoData(badActors)
-
-	for ip, geodata := range ipData {
-		fmt.Println("IP:", ip, "Data:", geodata)
-		fmt.Println("")
-		fmt.Println("------------------------------------------------------------------------")
 	}
 }

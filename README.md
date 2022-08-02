@@ -15,7 +15,7 @@
 
   
   ```
-  go build overseer_tui.go
+  go build overseer_tui.go logMonitor.go commands.go
   sudo ./overseer_tui
   ```
 
